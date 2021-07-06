@@ -8,34 +8,39 @@ const refs = {
  * миллисекунд в одном дне (миллисекунды * секунды * минуты * часы)
  */
 
-
-
-
-
-
 class Timer {
-
 
     constructor(targetTime) {
         this.targetTime = new Date(targetTime)
     }
 
+     stopInterval(interval) {
+         clearInterval(interval)
+    }
+
+
     start() {
         const unixTargetTime = Date.parse(this.targetTime)
-        refs.daysUntilEndOfDiscount.textContent = `The discount will end on ${formatDate(this.targetTime)}`
         setInterval(() => {
             const currentTime = Date.now()
             const deltaTime = (unixTargetTime - currentTime)
+            if (deltaTime <= 0) {
+                refs.timerInterface.textContent = "The time is over"
+                return
+            }
+             refs.daysUntilEndOfDiscount.textContent = `The discount will end on ${formatDate(this.targetTime)}`
             const {days, hours, mins, secs} = getTimeComponents(deltaTime)
             updateClockface({days, hours, mins, secs})
         }, 1000)
     }
 
+
 }
 
-const timer = new Timer('Jul 25, 2021 12:00')
+const timer = new Timer('Jul 05, 2021 12:00')
 
 timer.start()
+
 
 function updateClockface({ days, hours, mins, secs }) {
     refs.timerInterface.textContent = `${days}:${hours}:${mins}:${secs}`
@@ -78,6 +83,10 @@ function formatDate(date)
 
       return mm + '/' + dd + '/' + yyyy;
     }
+
+
+
+
 
 
 
